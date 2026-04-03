@@ -1,0 +1,21 @@
+# .gitlab-ci.yml
+# Конфигурация для деплоя на GitLab Pages
+
+image: node:24
+
+# Определение этапов
+stages:
+  - deploy
+
+pages:
+  stage: deploy
+  script:
+    - npm install
+    - npm run build
+    - rm -rf public
+    - mv dist public # GitLab Pages ожидает контент в директории 'public'
+  artifacts:
+    paths:
+      - public
+  only:
+    - main # Срабатывает только при пуше в ветку main
