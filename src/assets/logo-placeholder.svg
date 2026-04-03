@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" width="160" height="40">
+  <!-- ROSA wordmark placeholder -->
+  <rect x="0" y="0" width="160" height="40" rx="6" fill="none"/>
+  <!-- Orange accent block -->
+  <rect x="0" y="0" width="6" height="40" rx="3" fill="#FB693C"/>
+  <!-- ROSA text -->
+  <text x="16" y="26" font-family="'PT Root UI', 'Rubik', Arial, sans-serif" font-size="20" font-weight="700" fill="#1E1E21" letter-spacing="2">РОСА</text>
+</svg>
