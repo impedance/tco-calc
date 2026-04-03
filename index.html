@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <title>Калькулятор ТСО РОСА — оцените экономию от миграции на отечественную ОС</title>
+    <meta name="description" content="Инструмент для быстрой оценки совокупной стоимости владения (ТСО) при переходе на операционную систему РОСА. Сравните затраты на 1–5 лет и оцените экономический эффект." />
+    <meta name="keywords" content="РОСА, ТСО, калькулятор, TCO, миграция, отечественная ОС, импортозамещение, Linux" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Калькулятор ТСО РОСА" />
+    <meta property="og:description" content="Оцените экономический эффект перехода на ОС РОСА за 2 минуты." />
+    <meta property="og:type" content="website" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+
+  <body>
+    <!-- ══════════════════════════════════════════════
+         HEADER
+    ════════════════════════════════════════════════ -->
+    <header class="site-header" role="banner">
+      <div class="container">
+        <a href="/" class="header-logo" aria-label="РОСА — на главную">
+          <img
+            src="/src/assets/logo-placeholder.svg"
+            alt="Логотип РОСА"
+            width="100"
+            height="32"
+            id="header-logo"
+          />
+          <span class="header-badge">TCO Calculator</span>
+        </a>
+
+        <nav class="header-actions" aria-label="Управление">
+          <button
+            class="btn btn-ghost btn-sm"
+            id="btn-reset"
+            type="button"
+            title="Сбросить все поля к значениям по умолчанию"
+          >
+            ↺ Сбросить
+          </button>
+          <button
+            class="btn btn-primary btn-sm"
+            id="btn-load-demo"
+            type="button"
+            title="Загрузить демонстрационный пример"
+          >
+            ▶ Загрузить пример
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ══════════════════════════════════════════════
+         HERO / INTRO SECTION
+    ════════════════════════════════════════════════ -->
+    <section class="hero-section" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <p class="hero-eyebrow">★ Инструмент пресейла</p>
+
+          <h1 class="hero-title" id="hero-title">
+            Калькулятор ТСО&nbsp;<span class="accent">РОСА</span>
+          </h1>
+
+          <p class="hero-subtitle">
+            Оцените совокупную стоимость владения при переходе
+            на операционную систему РОСА. Сравнение текущих затрат
+            с затратами на РОСА за горизонт до&nbsp;5&nbsp;лет.
+          </p>
+
+          <div class="hero-ctas">
+            <button
+              class="btn btn-primary btn-lg"
+              id="btn-load-demo-hero"
+              type="button"
+            >
+              ▶ Загрузить пример
+            </button>
+            <button
+              class="btn btn-secondary btn-lg"
+              id="btn-scroll-form"
+              type="button"
+            >
+              Ввести свои данные ↓
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         MAIN CALCULATOR AREA
+    ════════════════════════════════════════════════ -->
+    <main class="calc-main" id="calculator" role="main">
+      <div class="container">
+        <div class="calc-grid">
+
+          <!-- ─── LEFT: Input Form ─────────────────────── -->
+          <section aria-label="Параметры расчёта">
+
+            <!-- Scenario selector card -->
+            <div class="card" style="margin-bottom: var(--spacing-lg);">
+              <div class="card-header">
+                <div class="card-header-icon">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="card-title">Сценарий расчёта</div>
+                  <div class="card-subtitle">MVP поддерживает сценарий миграции ОС</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="form-group" style="margin-bottom:0">
+                  <label class="form-label" for="scenario-select">Сценарий</label>
+                  <select class="form-control" id="scenario-select" name="scenario" aria-describedby="scenario-hint">
+                    <option value="os-migration" selected>🖥 Миграция ОС (рабочие станции и серверы)</option>
+                    <option value="virtualization" disabled>☁ Виртуализация (скоро)</option>
+                    <option value="directory" disabled>🔑 Замена каталога (скоро)</option>
+                  </select>
+                  <p class="form-hint" id="scenario-hint">Дополнительные сценарии появятся в следующих версиях</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Main inputs card -->
+            <div class="card" id="form-card">
+              <div class="card-header">
+                <div class="card-header-icon">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5m-1.414-9.414a2 2 0 1 1 2.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="card-title">Параметры инфраструктуры</div>
+                  <div class="card-subtitle">Введите данные вашей организации</div>
+                </div>
+              </div>
+
+              <div class="card-body">
+
+                <!-- Section: Infrastructure counts -->
+                <div class="form-section">
+                  <div class="form-section-title">Масштаб инфраструктуры</div>
+
+                  <div class="form-row">
+                    <div class="form-group" id="fg-workstations">
+                      <label class="form-label" for="input-workstations">
+                        Рабочих станций
+                      </label>
+                      <div class="input-group">
+                        <input
+                          class="form-control"
+                          type="number"
+                          id="input-workstations"
+                          name="workstations"
+                          min="0"
+                          step="1"
+                          placeholder="500"
+                          value="500"
+                          aria-describedby="workstations-hint workstations-error"
+                        />
+                        <span class="input-suffix">шт</span>
+                      </div>
+                      <p class="form-hint" id="workstations-hint">Целое число, мин. 0</p>
+                      <p class="form-error" id="workstations-error" role="alert"></p>
+                    </div>
+
+                    <div class="form-group" id="fg-servers">
+                      <label class="form-label" for="input-servers">
+                        Серверов
+                      </label>
+                      <div class="input-group">
+                        <input
+                          class="form-control"
+                          type="number"
+                          id="input-servers"
+                          name="servers"
+                          min="0"
+                          step="1"
+                          placeholder="25"
+                          value="25"
+                          aria-describedby="servers-hint servers-error"
+                        />
+                        <span class="input-suffix">шт</span>
+                      </div>
+                      <p class="form-hint" id="servers-hint">Целое число, мин. 0</p>
+                      <p class="form-error" id="servers-error" role="alert"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-group" id="fg-years">
+                    <label class="form-label" for="input-years">
+                      Горизонт расчёта:
+                      <span id="years-display" style="color: var(--rosa-primary-orange); font-weight:700;">3 года</span>
+                    </label>
+                    <div class="range-group">
+                      <span class="text-muted" style="font-size:var(--font-size-xs);font-weight:600;">1</span>
+                      <input
+                        type="range"
+                        id="input-years"
+                        name="years"
+                        min="1"
+                        max="5"
+                        step="1"
+                        value="3"
+                        aria-label="Горизонт расчёта в годах"
+                        aria-valuemin="1"
+                        aria-valuemax="5"
+                        aria-valuenow="3"
+                      />
+                      <span class="text-muted" style="font-size:var(--font-size-xs);font-weight:600;">5</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Section: Baseline profile -->
+                <div class="form-section">
+                  <div class="form-section-title">Профиль текущих затрат</div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="input-baseline-profile">Текущий профиль</label>
+                    <select
+                      class="form-control"
+                      id="input-baseline-profile"
+                      name="baselineProfile"
+                      aria-describedby="profile-warning"
+                    >
+                      <option value="custom" selected>Ввести вручную</option>
+                      <option value="basealt">BaseAlt (иллюстративный)</option>
+                      <option value="astra">Astra (вручную)</option>
+                      <option value="red">RED OS (вручную)</option>
+                    </select>
+                  </div>
+
+                  <div class="preset-warning" id="profile-warning" role="status" aria-live="polite">
+                    <span>⚠</span>
+                    <span>Бенчмарк-предустановка носит иллюстративный характер и не заменяет коммерческое предложение поставщика.</span>
+                  </div>
+
+                  <!-- Baseline cost inputs (shown for all profiles but pre-filled from preset) -->
+                  <div class="form-row" style="margin-top: var(--spacing-md);">
+                    <div class="form-group" id="fg-ws-cost">
+                      <label class="form-label" for="input-ws-cost">
+                        Стоимость 1 РС в год
+                      </label>
+                      <div class="input-group">
+                        <input
+                          class="form-control"
+                          type="number"
+                          id="input-ws-cost"
+                          name="wsAnnualCost"
+                          min="0"
+                          step="100"
+                          value="7500"
+                          aria-describedby="ws-cost-error"
+                        />
+                        <span class="input-suffix">₽</span>
+                      </div>
+                      <p class="form-error" id="ws-cost-error" role="alert"></p>
+                    </div>
+
+                    <div class="form-group" id="fg-srv-cost">
+                      <label class="form-label" for="input-srv-cost">
+                        Стоимость 1 сервера в год
+                      </label>
+                      <div class="input-group">
+                        <input
+                          class="form-control"
+                          type="number"
+                          id="input-srv-cost"
+                          name="srvAnnualCost"
+                          min="0"
+                          step="100"
+                          value="16000"
+                          aria-describedby="srv-cost-error"
+                        />
+                        <span class="input-suffix">₽</span>
+                      </div>
+                      <p class="form-error" id="srv-cost-error" role="alert"></p>
+                    </div>
+                  </div>
+                </div>
+
+              </div><!-- /.card-body -->
+
+              <!-- Advanced options accordion -->
+              <button
+                class="advanced-toggle"
+                id="btn-advanced"
+                type="button"
+                aria-controls="advanced-body"
+                aria-expanded="false"
+              >
+                <span>🔧 Дополнительные параметры (разовые затраты)</span>
+                <svg class="advanced-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+
+              <div class="advanced-body" id="advanced-body" aria-hidden="true">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="input-migration-cost">Разовые затраты на миграцию</label>
+                    <div class="input-group">
+                      <input class="form-control" type="number" id="input-migration-cost" name="migrationCost" min="0" step="1000" value="0" />
+                      <span class="input-suffix">₽</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-training-cost">Разовые затраты на обучение</label>
+                    <div class="input-group">
+                      <input class="form-control" type="number" id="input-training-cost" name="trainingCost" min="0" step="1000" value="0" />
+                      <span class="input-suffix">₽</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="input-pilot-cost">Разовые затраты на пилот</label>
+                    <div class="input-group">
+                      <input class="form-control" type="number" id="input-pilot-cost" name="pilotCost" min="0" step="1000" value="0" />
+                      <span class="input-suffix">₽</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-hw-delta">Доп. затраты / экономия на оборудовании</label>
+                    <div class="input-group">
+                      <input class="form-control" type="number" id="input-hw-delta" name="hwDelta" step="1000" value="0" />
+                      <span class="input-suffix">₽</span>
+                    </div>
+                    <p class="form-hint">Отрицательное значение = экономия</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="input-notes">Заметки (не влияют на расчёт)</label>
+                  <textarea
+                    class="form-control"
+                    id="input-notes"
+                    name="notes"
+                    rows="3"
+                    placeholder="Любые пометки для демонстрации..."
+                    style="resize: vertical;"
+                  ></textarea>
+                </div>
+              </div><!-- /.advanced-body -->
+
+            </div><!-- /.card#form-card -->
+          </section>
+
+          <!-- ─── RIGHT: Results Sidebar ───────────────── -->
+          <aside id="results-panel" class="results-sidebar" aria-label="Результаты расчёта" aria-live="polite">
+            <div class="card results-card">
+              <div class="results-header">
+                <div class="results-header-title">Результаты ТСО</div>
+                <div class="results-header-subtitle" id="results-period-label">Горизонт: 3 года</div>
+              </div>
+
+              <!-- Metrics -->
+              <div class="results-body" id="results-metrics">
+
+                <div class="metric">
+                  <div class="metric-label">Текущий TCO</div>
+                  <div class="metric-value" id="metric-current-tco">—</div>
+                  <div class="metric-sub" id="metric-current-sub"></div>
+                </div>
+
+                <div class="metric">
+                  <div class="metric-label">TCO на РОСА</div>
+                  <div class="metric-value" id="metric-rosa-tco">—</div>
+                  <div class="metric-sub" id="metric-rosa-sub"></div>
+                </div>
+
+                <div class="metric">
+                  <div class="metric-label">Экономия</div>
+                  <div class="metric-value" id="metric-savings">—</div>
+                  <div class="metric-sub" id="metric-savings-pct"></div>
+                </div>
+
+                <div class="metric">
+                  <div class="metric-label">Окупаемость</div>
+                  <div class="metric-value" id="metric-breakeven">—</div>
+                  <div class="metric-sub" id="metric-breakeven-sub"></div>
+                </div>
+
+              </div>
+
+              <!-- Comparison bars -->
+              <div class="comparison-bars" id="comparison-bars">
+                <div class="comparison-bar-label">Сравнение затрат</div>
+
+                <div class="bar-item">
+                  <div class="bar-meta">
+                    <span class="bar-name">Текущий стек</span>
+                    <span class="bar-amount" id="bar-current-amount">—</span>
+                  </div>
+                  <div class="bar-track">
+                    <div class="bar-fill current" id="bar-current-fill" style="width: 0%"></div>
+                  </div>
+                </div>
+
+                <div class="bar-item">
+                  <div class="bar-meta">
+                    <span class="bar-name" style="color: var(--rosa-primary-orange);">РОСА</span>
+                    <span class="bar-amount" id="bar-rosa-amount">—</span>
+                  </div>
+                  <div class="bar-track">
+                    <div class="bar-fill rosa" id="bar-rosa-fill" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recommendation -->
+              <div class="recommendation-block" id="recommendation-block">
+                <div class="recommendation-badge positive" id="recommendation-badge" style="display:none;">
+                  <span class="recommendation-icon" id="recommendation-icon">✓</span>
+                  <span class="recommendation-text" id="recommendation-text"></span>
+                </div>
+              </div>
+
+              <!-- Action buttons -->
+              <div class="results-actions">
+                <button class="btn btn-ghost btn-sm" id="btn-copy-summary" type="button" title="Скопировать текстовую сводку результатов">
+                  📋 Копировать
+                </button>
+                <span class="copy-feedback" id="copy-feedback" aria-live="polite">✓ Скопировано</span>
+              </div>
+
+              <!-- Disclaimer note -->
+              <div style="padding: 0 var(--spacing-xl) var(--spacing-lg);">
+                <div class="disclaimer-note">
+                  <span class="disclaimer-icon">ℹ</span>
+                  <span>Расчёт является ориентировочным и не является коммерческим предложением.</span>
+                </div>
+              </div>
+
+            </div><!-- /.results-card -->
+          </aside>
+
+        </div><!-- /.calc-grid -->
+      </div><!-- /.container -->
+    </main>
+
+    <!-- ══════════════════════════════════════════════
+         FOOTER
+    ════════════════════════════════════════════════ -->
+    <footer class="site-footer" role="contentinfo">
+      <div class="container">
+        <div class="footer-inner">
+
+          <!-- CTA block -->
+          <div class="footer-cta-block">
+            <p class="footer-cta-text">
+              Хотите проверить расчёт на вашем контуре?<br>
+              <strong style="color:#fff;">Запросите консультацию или пилотный проект.</strong>
+            </p>
+            <a
+              href="https://rosa.ru"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-primary btn-lg"
+              id="btn-contact-cta"
+            >
+              Связаться с РОСА →
+            </a>
+          </div>
+
+          <hr class="footer-divider" />
+
+          <p class="footer-disclaimer">
+            <strong>Отказ от ответственности:</strong>
+            Расчёт является ориентировочным и не является коммерческим предложением.
+            Результат основан на публично доступных данных РОСА и/или введённых допущениях.
+            Итоговые затраты на проект зависят от уровня поддержки, требований к сертификации,
+            объёма развёртывания, интеграционных работ, условий партнёра и иных коммерческих условий.
+          </p>
+
+          <div class="footer-bottom">
+            <span>© 2026 РОСА. Все права защищены.</span>
+            <nav class="footer-legal" aria-label="Правовая информация">
+              <a href="https://rosa.ru" target="_blank" rel="noopener noreferrer">rosa.ru</a>
+            </nav>
+          </div>
+
+        </div>
+      </div>
+    </footer>
+
+    <!-- ── Scripts ────────────────────────────────────── -->
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
