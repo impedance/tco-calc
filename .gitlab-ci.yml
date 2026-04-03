@@ -1,4 +1,3 @@
-
 # .gitlab-ci.yml
 # Конфигурация для деплоя на GitLab Pages
 
@@ -10,6 +9,8 @@ stages:
 
 pages:
   stage: deploy
+  tags:
+    - docker # Добавили тег из проекта gostpdf, чтобы раннер подхватил задачу
   script:
     - npm install
     - npm run build
@@ -19,4 +20,4 @@ pages:
     paths:
       - public
   only:
-    - main # Срабатывает только при пуше в ветку main
+    - main # Срабатывает при пуше в ветку main
