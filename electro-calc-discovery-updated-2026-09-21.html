@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Electro-calc — результаты discovery и вопросы до ТЗ</title>
+<style>
+:root{
+  --ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;--card:#fff;
+  --blue:#2563eb;--blue2:#1e3a8a;--green:#166534;--green-bg:#dcfce7;
+  --amber:#92400e;--amber-bg:#fef3c7;--red:#991b1b;--red-bg:#fee2e2;
+  --violet:#5b21b6;--violet-bg:#ede9fe;--slate-bg:#f1f5f9;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.58 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+a{color:var(--blue)}
+.wrap{max-width:1180px;margin:auto}
+.hero{background:linear-gradient(135deg,#0f172a 0%,#172554 48%,#1e40af 100%);color:#fff;padding:52px 24px 44px}
+.hero h1{font-size:42px;line-height:1.08;margin:0 0 14px;letter-spacing:-.02em}
+.hero .lead{max-width:930px;color:#dbeafe;font-size:18px;margin:0}
+.meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
+.chip{display:inline-flex;align-items:center;border:1px solid #ffffff38;background:#ffffff13;border-radius:999px;padding:6px 10px;font-size:13px}
+.nav{position:sticky;top:0;z-index:20;background:#ffffffed;backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;gap:8px;overflow:auto;padding:10px 24px}
+.nav a{white-space:nowrap;text-decoration:none;color:#334155;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 10px;font-size:13px}
+main{padding:26px 24px 56px}
+h2{font-size:27px;line-height:1.2;margin:42px 0 14px;letter-spacing:-.015em}
+h3{font-size:18px;line-height:1.3;margin:0 0 7px}
+p{margin:8px 0}
+.small{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:17px}
+.stat b{display:block;font-size:30px;line-height:1.05;margin-bottom:5px}
+.callout{border:1px solid #bfdbfe;border-left:5px solid var(--blue);background:#eff6ff;border-radius:12px;padding:15px 17px;margin:16px 0}
+.callout.success{border-color:#bbf7d0;border-left-color:#16a34a;background:#f0fdf4}
+.callout.warn{border-color:#fed7aa;border-left-color:#f97316;background:#fff7ed}
+.callout.danger{border-color:#fecaca;border-left-color:#dc2626;background:#fef2f2}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.scope h3{display:flex;align-items:center;gap:8px}
+.scope ul{margin:9px 0 0;padding-left:20px}
+.scope li{margin:5px 0}
+.flow{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin:18px 0 6px}
+.step{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px;min-height:115px;position:relative}
+.step b{display:block;margin-bottom:5px;color:#1e3a8a}
+.step:not(:last-child)::after{content:'→';position:absolute;right:-13px;top:42%;font-weight:800;color:#94a3b8;z-index:2}
+.decision-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.decision{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px}
+.decision .tag{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--blue);margin-bottom:6px}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:750;white-space:nowrap}
+.badge.done,.badge.confirmed{background:var(--green-bg);color:var(--green)}
+.badge.progress,.badge.open{background:var(--amber-bg);color:var(--amber)}
+.badge.todo{background:var(--slate-bg);color:#475569}
+.badge.observed{background:var(--violet-bg);color:var(--violet)}
+.badge.resolved{background:#dbeafe;color:#1d4ed8}
+.question-intro{display:flex;justify-content:space-between;align-items:end;gap:16px}
+.qgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.qcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;position:relative;overflow:hidden}
+.qcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--blue)}
+.qid{font-size:12px;font-weight:850;color:var(--blue);margin-bottom:5px;letter-spacing:.04em}
+.known{margin-top:11px;padding:10px 11px;background:#f8fafc;border-radius:10px;color:#334155;font-size:13px}
+.ask{margin-top:10px;padding:10px 11px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px}
+.ask b{color:#9a3412}
+.answer-line{margin-top:10px;border-top:1px dashed #cbd5e1;padding-top:9px;color:#94a3b8;font-size:12px}
+.case-chain{display:grid;grid-template-columns:repeat(8,1fr);gap:7px;margin-top:14px}
+.case-item{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px;min-height:80px;font-size:13px}
+.case-item b{display:block;color:#1e3a8a;margin-bottom:4px}
+.plan{display:grid;gap:9px}
+.plan-row{display:grid;grid-template-columns:70px 145px 1fr;gap:10px;align-items:start;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.plan-row .num{font-weight:850;color:#334155}
+.tablewrap{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:15px}
+table{border-collapse:collapse;width:100%;min-width:860px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{position:sticky;top:0;background:#f8fafc;z-index:1;font-size:13px;color:#475569}
+tr:last-child td{border-bottom:0}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.controls input{flex:1;min-width:250px;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;background:#fff}
+.controls button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;cursor:pointer;color:#334155}
+.controls button.active{background:#0f172a;color:#fff;border-color:#0f172a}
+details{background:#fff;border:1px solid var(--line);border-radius:14px;margin-top:14px}
+summary{cursor:pointer;padding:14px 16px;font-weight:800}
+details .inside{padding:0 16px 16px}
+.source-list{columns:2;column-gap:28px;margin:8px 0;padding-left:20px}
+.footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+.note{font-size:12px;color:#64748b}
+@media(max-width:1000px){.grid{grid-template-columns:1fr 1fr}.decision-grid{grid-template-columns:1fr 1fr}.flow,.case-chain{grid-template-columns:repeat(4,1fr)}.step:nth-child(4)::after,.case-item:nth-child(4)::after{display:none}.step::after{display:none}}
+@media(max-width:720px){.hero h1{font-size:34px}.two,.qgrid,.decision-grid{grid-template-columns:1fr}.flow,.case-chain{grid-template-columns:1fr 1fr}.plan-row{grid-template-columns:58px 105px 1fr}.source-list{columns:1}.question-intro{display:block}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}.flow,.case-chain{grid-template-columns:1fr}.plan-row{grid-template-columns:1fr}.hero{padding-top:38px}}
+@media print{
+  body{background:#fff;font-size:12px}.hero{background:#fff;color:#000;padding:15px 0;border-bottom:2px solid #000}.hero .lead{color:#222}.chip{border-color:#999;background:#fff;color:#000}.nav,.controls{display:none}main{padding:0}.wrap{max-width:none}.card,.decision,.qcard,.step,.case-item,.plan-row,.tablewrap,details{break-inside:avoid}.qgrid,.two,.decision-grid{gap:8px}.footer{page-break-before:auto}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>Electro-calc — результаты discovery и вопросы до ТЗ</h1>
+    <p class="lead">Краткая фиксация результатов созвона с Алексеем 17.09.2026 и актуального состояния проектной карты. Документ показывает, что уже подтверждено, как сейчас выполняется расчёт и какие решения ещё нужны от заказчика/эксперта перед подготовкой ТЗ пилота.</p>
+    <div class="meta">
+      <span class="chip">Созвон: 17.09.2026</span>
+      <span class="chip">Актуализация карты: 21.09.2026</span>
+      <span class="chip">Scope: модульные щиты 0,4 кВ, до 125А</span>
+      <span class="chip">Статус: discovery → до ТЗ</span>
+    </div>
+  </div>
+</header>
+<nav class="nav"><div class="wrap">
+  <a href="#summary">Краткий итог</a><a href="#scope">Границы</a><a href="#process">Процесс</a><a href="#decisions">Решения</a><a href="#questions">Вопросы до ТЗ</a><a href="#cases">Эталонные кейсы</a><a href="#plan">План</a><a href="#evidence">Evidence</a>
+</div></nav>
+<main class="wrap">
+<section id="summary">
+  <h2>Краткий итог discovery</h2>
+  <div class="grid">
+    <div class="card stat"><b>8</b><span>этапов фактического процесса расчёта</span></div>
+    <div class="card stat"><b>21</b><span>факт / наблюдение в evidence ledger</span></div>
+    <div class="card stat"><b>8</b><span>вопросов, которые нужно закрыть до ТЗ</span></div>
+    <div class="card stat"><b>3–5</b><span>реальных кейсов нужны как эталон и приёмочная база</span></div>
+  </div>
+  <div class="callout success"><strong>Главный вывод:</strong> основная ценность пилота — не распознавание PDF и не AI-анализ исходной документации. На первом этапе важнее убрать повторный ручной поиск и перенос артикулов, цен и работ, формализовать типовой подбор оборудования и корпуса и безопасно выводить нетиповые случаи на ручную инженерную проверку.</div>
+  <div class="callout warn"><strong>Финансовая модель уточнена:</strong> сборочные работы считаются отдельно по эмпирическим расценкам в зависимости от оборудования/сложности; расходные материалы тоже оцениваются отдельно. Старое рабочее допущение «стоимость работ = стоимость материалов» больше не используется. Формальные нормы работ, расходников, прибыли/наценки, НДС/скидок и правила актуальности цен ещё предстоит зафиксировать.</div>
+  <div class="callout"><strong>Важно:</strong> 30% от материальной суммы наблюдались в одном показанном Excel-примере. Пока это <em>не</em> считается общим бизнес-правилом и должно быть проверено на эталонных кейсах.</div>
+</section>
+
+<section id="scope">
+  <h2>Что уже считаем согласованным по пилоту</h2>
+  <div class="two scope">
+    <div class="card">
+      <h3>В пилоте</h3>
+      <ul>
+        <li>модульные распределительные шкафы 0,4 кВ до 125А;</li>
+        <li>типовые схемы без АВР и управляющей логики;</li>
+        <li>вводной аппарат + отходящие группы + производитель/серия;</li>
+        <li>внутренний расчёт состава, материалов, работ, прибыли и итога;</li>
+        <li>два клиентских формата КП;</li>
+        <li>несколько шкафов и агрегация одинаковых шкафов в одном КП;</li>
+        <li>ручной ввод параметров из исходной схемы/спецификации.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Не входит в текущий пилот</h3>
+      <ul>
+        <li>КСО/РУ и оборудование 6–10 кВ;</li>
+        <li>немодульные шкафы;</li>
+        <li>АВР, управление освещением, насосами, двигателями и другая логика;</li>
+        <li>AI/OCR/понимание входящих PDF, изображений и чертежей;</li>
+        <li>автоматизация редких физических ограничений подключения кабеля — пока ручная эскалация.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <h2>Как сейчас проходит расчёт у Алексея</h2>
+  <p class="small">Наблюдаемый walkthrough 17.09.2026.</p>
+  <div class="flow">
+    <div class="step"><b>1. Исходник</b>Схема / спецификация / PDF / изображение / иногда AutoCAD.</div>
+    <div class="step"><b>2. Анализ</b>Номиналы, полюса, серии, противоречия и недостающие данные.</div>
+    <div class="step"><b>3. Вопросы</b>Уточнения заказчику или явные допущения, если ответ можно не ждать.</div>
+    <div class="step"><b>4. Подбор</b>Производитель/серия, аппараты, артикулы; возможна смешанная комплектация.</div>
+    <div class="step"><b>5. Корпус</b>Подсчёт модулей, округление вверх, резерв, тип корпуса.</div>
+    <div class="step"><b>6. Цены</b>Прошлые расчёты, прайсы производителей, ЭТМ, ручное обновление цен.</div>
+    <div class="step"><b>7. Экономика</b>Работы, расходники, прибыль/наценка и итоговая стоимость.</div>
+    <div class="step"><b>8. КП</b>Внутренний расчёт и клиентский формат предложения.</div>
+  </div>
+  <div class="callout"><strong>Узкое место:</strong> если нужный артикул уже есть в старом расчёте/прайсе, работа идёт быстро. Больше всего времени занимает поиск и занесение новой позиции. Исторические Excel-файлы фактически выполняют роль неформальной базы артикулов, цен и работ.</div>
+</section>
+
+<section id="decisions">
+  <h2>Что мы уже узнали и зафиксировали</h2>
+  <div class="decision-grid">
+    <div class="decision"><div class="tag">Пользователь</div><h3>Первый пользователь — Алексей</h3><p>На вход получает заявку клиента, на выходе нужен предварительный расчёт и КП.</p></div>
+    <div class="decision"><div class="tag">Ценность</div><h3>Автоматизируем повторяющиеся действия</h3><p>Приоритет — справочник и воспроизводимый подбор, а не чтение документа искусственным интеллектом.</p></div>
+    <div class="decision"><div class="tag">Данные</div><h3>Источники уже понятны</h3><p>Excel Алексея, прайсы производителей и ЭТМ. Не определены только приоритет и допустимая свежесть цены.</p></div>
+    <div class="decision"><div class="tag">Инженерия</div><h3>Нельзя молча заменять невозможные позиции</h3><p>Если позиция отсутствует/невозможна или данных недостаточно, решение должно фиксироваться и при необходимости передаваться инженеру.</p></div>
+    <div class="decision"><div class="tag">Финансы</div><h3>Работы и расходники — отдельные составляющие</h3><p>Они не приравниваются автоматически к материалам; конкретные нормы ещё нужно формализовать.</p></div>
+    <div class="decision"><div class="tag">Приёмка</div><h3>Нужна проверка на реальных кейсах</h3><p>3–5 заранее согласованных кейсов, технический состав — 100% к эталону, стоимость — ориентир ±20%, расчёт должен быть быстрее ручного.</p></div>
+  </div>
+</section>
+
+<section id="questions">
+  <div class="question-intro">
+    <div><h2>Что нужно спросить / зафиксировать до ТЗ</h2><p class="small">Это основной блок, по которому сейчас нужны ответы заказчика и Алексея. Решённые вопросы здесь не повторяются.</p></div>
+    <span class="badge open">8 открытых блоков</span>
+  </div>
+  <div class="qgrid">
+    <article class="qcard"><div class="qid">Q-01 · Финансовая модель</div><h3>Как формально считать работы, расходники и коммерческую часть?</h3><div class="known"><b>Уже знаем:</b> сборочные работы считаются отдельно и эмпирически по оборудованию/сложности; расходники — отдельно. «Работы = материалы» больше не действует.</div><div class="ask"><b>Нужно ответить:</b> какие нормы/таблица используются для работ и расходников? Как считается прибыль или наценка? Как учитываются НДС и скидки? Процент прибыли фиксированный или меняется?</div><div class="answer-line">Ожидаемый результат: формула или decision table, пригодная для ТЗ.</div></article>
+    <article class="qcard"><div class="qid">Q-02 · Актуальность цен</div><h3>Какой источник цены считать главным и насколько свежей должна быть цена?</h3><div class="known"><b>Уже знаем:</b> используются прайсы производителей, ЭТМ и накопленные прошлые расчёты; цены переносятся/обновляются вручную.</div><div class="ask"><b>Нужно ответить:</b> приоритет источников; допустимый срок актуальности; что делать, если цена отсутствует; нужна ли дата/версия прайса в каждом расчёте.</div><div class="answer-line">Ожидаемый результат: политика источника, версии и freshness SLA.</div></article>
+    <article class="qcard"><div class="qid">Q-03 · Корпус и резерв</div><h3>Как формализовать выбор размера и типа корпуса?</h3><div class="known"><b>Уже знаем:</b> модули суммируются, корпус округляется вверх и берётся с запасом; в демонстрации были примеры 33→48 и 19→24 модулей.</div><div class="ask"><b>Нужно ответить:</b> обязательный резерв — процент, число модулей или экспертное решение? Как учитывать серию, степень защиты, навесной/встраиваемый тип?</div><div class="answer-line">Ожидаемый результат: однозначное правило выбора корпуса для типового случая.</div></article>
+    <article class="qcard"><div class="qid">Q-04 · Замены и ошибки проекта</div><h3>Когда можно выбрать замену, когда надо спросить клиента, а когда остановить расчёт?</h3><div class="known"><b>Уже знаем:</b> в проектах встречаются невозможные позиции и конфликтующие данные; молчаливая замена нежелательна.</div><div class="ask"><b>Нужно ответить:</b> правила для случаев «нет такого номинала», «серия не указана», «спецификация конфликтует со схемой», «шкаф технически не подходит».</div><div class="answer-line">Ожидаемый результат: таблица примеров «автоподбор / вопрос / стоп / ручная эскалация».</div></article>
+    <article class="qcard"><div class="qid">Q-05 · Производитель и серия</div><h3>Кто и по какому правилу выбирает производителя/серию?</h3><div class="known"><b>Уже знаем:</b> если бренд не задан, Алексей может выбрать его сам, предупредить заказчика и затем пересчитать; возможна смешанная комплектация.</div><div class="ask"><b>Нужно ответить:</b> правило выбора по умолчанию; допустимость смешанных брендов; нужен ли расчёт нескольких вариантов одновременно.</div><div class="answer-line">Ожидаемый результат: правило выбора + границы допустимой смешанной комплектации.</div></article>
+    <article class="qcard"><div class="qid">Q-06 · Импорт данных</div><h3>Нужен ли в пилоте простой импорт Excel/CSV?</h3><div class="known"><b>Уже решено:</b> AI/OCR и понимание исходных документов не входят; основные параметры из схемы/спецификации вводятся человеком.</div><div class="ask"><b>Нужно ответить:</b> достаточно ли ручного ввода или нужен простой импорт уже структурированной спецификации Excel/CSV?</div><div class="answer-line">Ожидаемый результат: «только ручной ввод» или конкретный минимальный формат импорта.</div></article>
+    <article class="qcard"><div class="qid">Q-07 · Форматы результата</div><h3>Что именно должен видеть заказчик в двух форматах КП?</h3><div class="known"><b>Уже знаем:</b> нужен внутренний расчёт и два клиентских вида; одинаковые шкафы агрегируются, разные могут входить в одно КП.</div><div class="ask"><b>Нужно ответить:</b> точные колонки для каждого формата; какие данные скрывать; как показывать количество/партию; должны ли в КП печататься допущения и открытые вопросы.</div><div class="answer-line">Ожидаемый результат: 2 согласованных макета клиентского КП + внутренний вид.</div></article>
+    <article class="qcard"><div class="qid">Q-08 · Эталонные кейсы</div><h3>Какие 3–5 реальных расчётов берём как эталон?</h3><div class="known"><b>Уже знаем:</b> такие кейсы существуют и нужны для формализации правил и приёмки.</div><div class="ask"><b>Нужно предоставить:</b> полный комплект по каждому кейсу по цепочке ниже и отдельно пояснить 2–3 неочевидных экспертных решения.</div><div class="answer-line">Ожидаемый результат: набор кейсов, на котором можно воспроизвести расчёт и проверить пилот.</div></article>
+  </div>
+</section>
+
+<section id="cases">
+  <h2>Что нужно предоставить по каждому из 3–5 эталонных кейсов</h2>
+  <p class="small">Кейс считается пригодным для discovery и приёмки только при наличии полного контекста.</p>
+  <div class="case-chain">
+    <div class="case-item"><b>1. Исходник</b>Схема / спецификация / исходный файл клиента.</div>
+    <div class="case-item"><b>2. Вопросы</b>Что уточняли у клиента и почему.</div>
+    <div class="case-item"><b>3. Допущения</b>Что Алексей решил без ответа клиента.</div>
+    <div class="case-item"><b>4. Эталон</b>Ручной расчёт, который считаем правильным.</div>
+    <div class="case-item"><b>5. Состав</b>Аппараты, артикулы, корпус, модули.</div>
+    <div class="case-item"><b>6. Экономика</b>Цены, работы, расходники, прибыль/наценка.</div>
+    <div class="case-item"><b>7. Итог</b>Финальная стоимость и при необходимости пересчёт.</div>
+    <div class="case-item"><b>8. Пояснения</b>2–3 неочевидных инженерных решения.</div>
+  </div>
+</section>
+
+<section id="plan">
+  <h2>Что делаем дальше до подготовки ТЗ</h2>
+  <div class="plan">
+    <div class="plan-row"><div class="num">#2</div><div><span class="badge progress">InProgress</span></div><div><b>Собрать 3–5 полных эталонных кейсов.</b> Это база для подтверждения инженерных и финансовых правил.</div></div>
+    <div class="plan-row"><div class="num">#13</div><div><span class="badge todo">ToDo</span></div><div><b>Формализовать финансовую модель и контур цен.</b> Закрыть Q-01/Q-02 и проверить наблюдение про 30% на реальных кейсах.</div></div>
+    <div class="plan-row"><div class="num">#14</div><div><span class="badge todo">ToDo</span></div><div><b>Формализовать инженерные правила подбора и эскалации.</b> Закрыть Q-03/Q-04/Q-05 на тех же эталонных кейсах.</div></div>
+    <div class="plan-row"><div class="num">#8</div><div><span class="badge progress">InProgress</span></div><div><b>Закрыть границу ввода.</b> Ручной ввод уже принят; осталось решить только вопрос Excel/CSV import.</div></div>
+    <div class="plan-row"><div class="num">#12</div><div><span class="badge progress">InProgress</span></div><div><b>Подтвердить полноту discovery-материалов.</b> Материалы 17.09 уже обработаны; нужно убедиться, что ничего значимого не осталось в Telegram/Yandex.</div></div>
+    <div class="plan-row"><div class="num">#9</div><div><span class="badge progress">InProgress</span></div><div><b>Свести фактическую расчётную логику в единый формат.</b> После ответов/кейсов собрать pipeline, правила и исключения для ТЗ.</div></div>
+    <div class="plan-row"><div class="num">#11</div><div><span class="badge todo">ToDo · downstream</span></div><div><b>Собрать и согласовать ТЗ пилота.</b> Начинается после закрытия или явного решения discovery-вопросов, а не вместо них.</div></div>
+  </div>
+</section>
+
+<section id="evidence">
+  <h2>Evidence ledger</h2>
+  <p class="small">Ниже — проверяемая основа выводов. Для клиентского чтения этот блок можно свернуть; он нужен, чтобы отличать подтверждённые факты, наблюдения и открытые решения.</p>
+  <details>
+    <summary>Показать F-01…F-21</summary>
+    <div class="inside">
+      <div class="controls"><input id="search" type="search" placeholder="Поиск по фактам…"><button class="active" data-filter="all">Все</button><button data-filter="confirmed">Подтверждено</button><button data-filter="observed">Наблюдение</button><button data-filter="open">Открыто</button><button data-filter="resolved">Решено</button></div>
+      <div class="tablewrap"><table id="facts"><thead><tr><th>ID</th><th>Статус</th><th>Факт / наблюдение</th><th>Источник</th><th>Значение для ТЗ</th></tr></thead><tbody>
+        <tr data-status="confirmed"><td><b>F-01</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Пользователь первого этапа — Алексей; вход — заявка клиента, выход — предварительный расчёт и КП.</td><td>Карта Sociotech; расшифровки 17.09</td><td>Базовый пользовательский сценарий зафиксирован.</td></tr>
+        <tr data-status="confirmed"><td><b>F-02</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Исходники приходят в PDF, изображениях, иногда AutoCAD; спецификация может отсутствовать или содержать ошибки.</td><td>audio_18-03-15; audio_18-03-56</td><td>Нужны явные допущения и обработка неполных данных.</td></tr>
+        <tr data-status="confirmed"><td><b>F-03</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Процесс: анализ → вопросы → производитель/серия → комплектующие → корпус → цены/работы/расходники → итог → КП.</td><td>audio_18-03-56; audio_18-03-59</td><td>Каркас пользовательского сценария.</td></tr>
+        <tr data-status="confirmed"><td><b>F-04</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Если бренд/серия не заданы, Алексей выбирает вариант и сообщает допущение; возможна смешанная комплектация.</td><td>audio_18-03-15; 18-03-52; 18-03-56</td><td>Нужно фиксировать источник выбора и допущения.</td></tr>
+        <tr data-status="confirmed"><td><b>F-05</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Новый расчёт часто начинается копированием похожего старого; прошлые расчёты — фактическая база артикулов, цен и работ.</td><td>audio_18-03-47; 18-03-59</td><td>Нужен нормальный справочник и повторное использование данных.</td></tr>
+        <tr data-status="confirmed"><td><b>F-06</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Самая трудоёмкая часть — поиск и занесение новой позиции; известный артикул существенно ускоряет расчёт.</td><td>audio_18-03-59</td><td>Главная ценность MVP — сокращение повторного поиска и ввода.</td></tr>
+        <tr data-status="confirmed"><td><b>F-07</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Подбор опирается на номинал, число полюсов, серию/линейку и производителя; в исходнике может быть невозможная позиция.</td><td>audio_18-03-15; 18-03-47</td><td>Нужны правила не найдено/невозможно и ручная эскалация.</td></tr>
+        <tr data-status="confirmed"><td><b>F-08</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Корпус определяется по числу модулей с округлением вверх и запасом; формальное правило резерва не зафиксировано.</td><td>audio_18-03-15; 18-03-56; Screenshots p.33</td><td>Q-03 должен дать формальное правило.</td></tr>
+        <tr data-status="confirmed"><td><b>F-09</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Тип корпуса может быть не указан; Алексей считает с допущением и меняет после ответа заказчика.</td><td>audio_18-03-15</td><td>Допущения должны быть видимы и сохраняться.</td></tr>
+        <tr data-status="confirmed"><td><b>F-10</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>ЭТМ используется для цен, доступности/сроков и сопутствующих товаров; также используются прайсы производителей.</td><td>audio_18-03-47; Screenshots p.5</td><td>Нужно определить приоритет источников.</td></tr>
+        <tr data-status="confirmed"><td><b>F-11</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Цены вручную переносятся в Excel и периодически обновляются; цены меняются чаще, чем номенклатура.</td><td>audio_18-03-56</td><td>Нужен управляемый процесс версий/обновлений.</td></tr>
+        <tr data-status="open"><td><b>F-12</b></td><td><span class="badge open">Открыто</span></td><td>Допустимая свежесть цены не согласована.</td><td>audio_18-03-56</td><td>Закрыть в Q-02.</td></tr>
+        <tr data-status="observed"><td><b>F-13</b></td><td><span class="badge observed">Наблюдение</span></td><td>В рабочем Excel есть количество, цена с НДС, сумма, сборочная работа, ТМЦ, прибыль 30%, итог и отдельная колонка «Работа».</td><td>Screenshots p.2, p.17</td><td>Финансовые поля должны быть воспроизводимы.</td></tr>
+        <tr data-status="observed"><td><b>F-14</b></td><td><span class="badge observed">Наблюдение</span></td><td>В показанном примере 30% считаются от материальной суммы без сборочной работы.</td><td>Screenshots p.17</td><td>Не считать общим правилом до проверки кейсов.</td></tr>
+        <tr data-status="confirmed"><td><b>F-15</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Сборочные работы задаются эмпирически по типу/сложности оборудования; расходники оцениваются отдельно по шкафу и обвязке.</td><td>audio_18-03-47; 18-03-56</td><td>Нужны нормы/decision table.</td></tr>
+        <tr data-status="confirmed"><td><b>F-16</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Excel хрупок: при копировании строк формулы могут не протянуться и часть суммы выпадает.</td><td>audio_18-03-47</td><td>Автоматизация должна исключить этот класс ошибок.</td></tr>
+        <tr data-status="confirmed"><td><b>F-17</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Показанный сторонний конфигуратор демонстрирует параметрический подбор, модули, шкаф, спецификацию и визуализацию.</td><td>audio_18-03-56; Screenshots p.24–40</td><td>Использовать как UX/функциональный референс, не как бизнес-правило.</td></tr>
+        <tr data-status="confirmed"><td><b>F-18</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>3–5 реальных расчётов существуют и были обещаны для разбора.</td><td>audio_18-03-56; 18-03-59</td><td>Нужны для формализации и приёмки.</td></tr>
+        <tr data-status="confirmed"><td><b>F-19</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Редко физическая подключаемость кабеля может сделать формально подходящий маленький шкаф непригодным; это предложено не автоматизировать в малом пилоте.</td><td>audio_18-03-52</td><td>Ручная эскалация / out-of-scope пилота.</td></tr>
+        <tr data-status="confirmed"><td><b>F-20</b></td><td><span class="badge confirmed">Подтверждено</span></td><td>Приёмка: 3–5 кейсов; технический состав 100%; цена примерно ±20%; расчёт быстрее ручного.</td><td>Карта Sociotech</td><td>Приёмочные кейсы должны быть воспроизводимыми.</td></tr>
+        <tr data-status="resolved"><td><b>F-21</b></td><td><span class="badge resolved">Решено 21.09</span></td><td>Ранее карта содержала «работы = материалы», но walkthrough Алексея показал отдельные эмпирические работы и расходники. Конфликт решён в пользу объяснения Алексея; старое правило больше не используется.</td><td>Карта ↔ audio_18-03-47 ↔ Screenshots p.17 + решение пользователя</td><td>В ТЗ формализовать реальные нормы, не возвращаться к старому допущению.</td></tr>
+      </tbody></table></div>
+    </div>
+  </details>
+  <details>
+    <summary>Источники и provenance</summary>
+    <div class="inside"><ul class="source-list">
+      <li>Запись 16-14-34 — слайды HQ.pdf</li><li>Скриншоты 17.09.2026.pdf</li><li>audio_2026-09-17_18-03-15.txt</li><li>audio_2026-09-17_18-03-40.txt</li><li>audio_2026-09-17_18-03-47.txt</li><li>audio_2026-09-17_18-03-52.txt</li><li>audio_2026-09-17_18-03-56.txt</li><li>audio_2026-09-17_18-03-59.txt</li><li>Discovery handoff electro-calc-discovery-2026-09-17 (1).md</li><li>Актуальная карта Sociotech electro-calc, revision b5671f992ccdcf37</li>
+    </ul><p class="note">ITP Quote / БТП / сторонние конфигураторы используются только как UX/архитектурные референсы и не являются источником бизнес-правил electro-calc.</p></div>
+  </details>
+</section>
+
+<div class="footer">
+  <b>Статус документа:</b> discovery, до подготовки ТЗ. Карта гипотез Sociotech синхронизирована 21.09.2026; структурный audit hypothesis map — 0 ошибок. Неподтверждённые правила в этом документе помечены как открытые вопросы или наблюдения.
+</div>
+</main>
+<script>
+(function(){
+  const search=document.getElementById('search');
+  const buttons=[...document.querySelectorAll('[data-filter]')];
+  const rows=[...document.querySelectorAll('#facts tbody tr')];
+  let filter='all';
+  function apply(){
+    const q=(search?.value||'').trim().toLowerCase();
+    rows.forEach(r=>{
+      const okStatus=filter==='all'||r.dataset.status===filter;
+      const okText=!q||r.innerText.toLowerCase().includes(q);
+      r.style.display=(okStatus&&okText)?'':'none';
+    });
+  }
+  buttons.forEach(b=>b.addEventListener('click',()=>{buttons.forEach(x=>x.classList.remove('active'));b.classList.add('active');filter=b.dataset.filter;apply()}));
+  search?.addEventListener('input',apply);
+})();
+</script>
+</body>
+</html>
